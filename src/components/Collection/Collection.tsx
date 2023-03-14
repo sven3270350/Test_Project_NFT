@@ -1,12 +1,13 @@
-import NftAsset from "../NftAsset";
 import React from "react";
 
+import NftAsset from "../NftAsset";
+
 interface CollectionProp {
-  data: NftAssetData[];
   className?: string;
+  data: NftAssetData[];
 }
 
-const Collection: React.FC<CollectionProp> = ({ data, className }) => (
+const Collection: React.FC<CollectionProp> = ({ className, data }) => (
   <div className={className}>
     {data.map((item, key) => (
       <React.Fragment key={key}>

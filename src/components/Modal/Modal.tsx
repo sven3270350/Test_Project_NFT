@@ -1,4 +1,6 @@
+import { MouseEvent, useCallback } from "react";
 import { Link } from "react-router-dom";
+
 import useModal from "../../hooks/useModal";
 
 interface ModalType {
@@ -7,21 +9,28 @@ interface ModalType {
 
 const Modal: React.FC<ModalType> = ({ open }) => {
   const { currentNft, setModal } = useModal();
+
   const address = document.location.href.slice(
     document.location.href.lastIndexOf("/") + 1
   );
 
-  if (!open) {
-    return null;
-  }
+  const handleInClicked = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
 
-  return (
+  const handleOutClicked = useCallback(() => {
+    setModal(null);
+  }, [setModal]);
+
+  return !open ? (
+    <></>
+  ) : (
     <div
       className="z-10 w-full h-full fixed top-0 left-0 bg-black/75 flex justify-center items-center"
-      onClick={() => setModal(null)}
+      onClick={handleOutClicked}
     >
       <div
-        onClick={(e) => e.stopPropagation()}
+        onClick={handleInClicked}
         className="bg-gray-900 m-5 sm:w-[50rem] p-3 rounded-lg flex flex-col max-h-[90%]"
       >
         <div className="flex flex-col lg:flex-row mb-3 overflow-auto items-center lg:items-start">
