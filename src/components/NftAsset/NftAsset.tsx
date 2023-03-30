@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import useModal from "../../hooks/useModal";
 
 interface NftAssetProps extends NftAssetData {
@@ -5,18 +7,23 @@ interface NftAssetProps extends NftAssetData {
 }
 
 const Nft: React.FC<NftAssetProps> = ({
-  image,
-  owner,
-  name,
   desc,
+  image,
+  name,
+  owner,
   tokenId,
 }) => {
   const { setModal } = useModal();
 
+  const handleClicked = useCallback(
+    () => setModal({ name, desc, image, owner, tokenId }),
+    [desc, image, name, owner, tokenId, setModal]
+  );
+
   return (
     <div
       className="flex flex-col rounded-md border-4 p-2 border-gray-900 bg-gray-800 hover:cursor-pointer hover:bg-gray-500"
-      onClick={() => setModal({ name, desc, image, owner, tokenId })}
+      onClick={handleClicked}
     >
       <img src={image} alt={"character-image " + name} className="rounded-md" />
       <h1 className="font-bold text-white text-xl p-2 text-center flex-grow">

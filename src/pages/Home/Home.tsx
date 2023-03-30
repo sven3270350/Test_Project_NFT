@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { APE_KUN_AddRESS, WANNA_PANDA_ADDRESS } from "../../config";
 
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
   const [address, setAddress] = useState<string>("");
   const navigate = useNavigate();
+
+  const handleAddressInputChanged = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => setAddress(e.target.value),
+    [setAddress]
+  );
+
+  const handleSubmitted = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      navigate(`/${address}`);
+    },
+    [navigate, address]
+  );
 
   return (
     <div className="flex">
@@ -14,32 +28,26 @@ const Home: React.FC<HomeProps> = () => {
           Choose collection below, or enter contract address and hit "Go"
         </p>
 
-        <Link
-          to="/0xe4a3cbfa0b27db2def20bfba80905515b0855e54"
-          className="block text-center"
-        >
+        <Link to={WANNA_PANDA_ADDRESS} className="block text-center">
           <button className="primary w-48">WannaPanda</button>
         </Link>
-        <Link
-          to="/0xb2081bf7a25e7bcce263f4a80847f0b6769ded6c"
-          className="block text-center mt-2"
-        >
+        <Link to={APE_KUN_AddRESS} className="block text-center mt-2">
           <button className="primary w-48">ApeKun By Tenjin</button>
         </Link>
 
         <form
           className="flex items-center justify-center flex-wrap mt-2"
-          onSubmit={() => navigate(`/${address}`)}
+          onSubmit={handleSubmitted}
         >
           <label>
             Enter NFT Address
             <input
               className="ml-2 w-72"
               placeholder="NFT collection address on Ethereum"
-              onChange={(e) => setAddress(e.target.value)}
+              onChange={handleAddressInputChanged}
             />
           </label>
-          <Link to={`/${address}`}>
+          <Link className="mt-2 sm:mt-0" to={`/${address}`}>
             <button className="secondary ml-2 w-16">Go</button>
           </Link>
         </form>

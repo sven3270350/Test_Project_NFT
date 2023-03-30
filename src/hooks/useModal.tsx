@@ -1,20 +1,21 @@
 import React, { useState, useContext, ReactNode } from "react";
+
 import Modal from "../components/Modal";
 
 interface ModalType {
-  currentNft: NftAssetData | null;
-  setModal: (data: NftAssetData | null) => void;
+  currentNft: Nullable<NftAssetData>;
+  setModal: (data: Nullable<NftAssetData>) => void;
 }
 
 const ModalContext = React.createContext<ModalType>({
   currentNft: null,
-  setModal: (_data: NftAssetData | null) => {},
+  setModal: (_data: Nullable<NftAssetData>) => {},
 });
 
 export const ModalProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [currentNft, setCurrentNft] = useState<NftAssetData | null>(null);
+  const [currentNft, setCurrentNft] = useState<Nullable<NftAssetData>>(null);
 
   return (
     <ModalContext.Provider

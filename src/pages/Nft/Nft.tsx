@@ -1,57 +1,10 @@
 import { useEffect, useState } from "react";
-import { Contract } from "ethers";
 import { useParams } from "react-router-dom";
+
 import Collection from "../../components/Collection";
-import {
-  getAllTokens,
-  getCollectionName,
-  isERC721Enumerable,
-  getContract,
-} from "../../api/token";
-import { getIpfsUrl } from "../../helpers";
+import { getCollection } from "../../helpers";
 
 interface NftProp {}
-
-const getAllTokenMeta = async (contract: Contract): Promise<NftAssetData[]> => {
-  const tokens = await getAllTokens(contract);
-  const meta = await Promise.all(
-    tokens.map((token) =>
-      fetch(token.uri)
-        .then((res) => res.json())
-        .catch((error) => console.error(error))
-    )
-  );
-
-  return meta.map((item, index) => ({
-    image: getIpfsUrl(item.image),
-    name: item.name,
-    desc: item.description,
-    owner: tokens[index].owner,
-    tokenId: tokens[index].id,
-  }));
-};
-
-const getCollection = async (address: string) => {
-  const contract = getContract(address);
-
-  try {
-    const res = await isERC721Enumerable(contract);
-    if (!res) {
-      throw Error("This contract is not ERC721 Enumerable");
-    }
-  } catch (e) {
-    throw Error("This contract is not ERC721 Enumerable");
-  }
-
-  try {
-    const name = await getCollectionName(contract);
-    const data = await getAllTokenMeta(contract);
-
-    return { name, data };
-  } catch (e) {
-    throw Error(JSON.stringify(e));
-  }
-};
 
 const Nft: React.FC<NftProp> = () => {
   const { address } = useParams();
@@ -60,9 +13,7 @@ const Nft: React.FC<NftProp> = () => {
   const [name, setName] = useState<string>();
 
   useEffect(() => {
-    if (!address) {
-      return;
-    }
+    if (!address) return;
 
     setStatus("Loading...");
     getCollection(address)
